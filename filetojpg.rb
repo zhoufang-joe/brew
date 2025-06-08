@@ -2,9 +2,9 @@ class Filetojpg < Formula
   desc "Convert files to JPG format and extract files from JPG"
   homepage "https://github.com/zhoufang-joe/FileToJPG"
   # Use a local dummy tarball since we can't access the private repo directly
-  url "file://#{File.expand_path("../dummy.tar.gz", __FILE__)}"
+  url "file://#{File.expand_path("dummy.tar.gz", File.dirname(__FILE__))}"
   version "2.0.0"
-  sha256 "85b02cd7d5bb6fad56e25ef7ee4c3cef3b0c4101391a6a21a7e203e868b4e23e"
+  sha256 "fdeeb3ffcd325db47bde582a9769ef71f51f3a1c718642f0f36075ea3cdcc778"
   license "MIT"
 
   depends_on "go" => :build

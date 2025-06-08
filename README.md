@@ -1,4 +1,4 @@
-# zhoufang-joe/brew
+# zhoufang-joe/homebrew-tap
 
 A Homebrew tap containing custom formulas for various tools and utilities.
 
@@ -20,7 +20,7 @@ A tool that converts files to JPG format and extracts files from JPG images.
 
 First, add this tap to your Homebrew:
 ```bash
-brew tap zhoufang-joe/brew
+brew tap zhoufang-joe/tap
 ```
 
 ### Install Formulas
@@ -80,7 +80,7 @@ brew uninstall filetojpg
 
 To remove the entire tap and all its formulas:
 ```bash
-brew untap zhoufang-joe/brew
+brew untap zhoufang-joe/tap
 ```
 
 ## Verification
@@ -141,7 +141,7 @@ Formulas in this tap may have different licenses. Check individual formula files
 
 ## Links
 
-- **This Tap**: https://github.com/zhoufang-joe/brew
+- **This Tap**: https://github.com/zhoufang-joe/homebrew-tap
 - **FileToJPG Source**: https://github.com/zhoufang-joe/FileToJPG
 - **Homebrew Documentation**: https://docs.brew.sh/
 - **Creating Homebrew Formulas**: https://docs.brew.sh/Formula-Cookbook 

@@ -23,8 +23,8 @@ class Fileencryptor < Formula
     # Ensure dependencies are up to date
     system "go", "mod", "tidy"
     
-    # Build the binary
-    system "go", "build", *std_go_args(ldflags: "-s -w"), "-o", bin/"fileencryptor"
+    # Build the binary and install to Homebrew's bin directory
+    system "go", "build", "-ldflags", "-s -w", "-o", bin/"FileEncryptor"
     
     # Install macOS-specific files and automatically set up Finder integration
     if OS.mac?
@@ -41,8 +41,10 @@ class Fileencryptor < Formula
       puts "FileEncryptor Finder service installed automatically!"
       puts "You may need to restart Finder or log out and back in for the service to appear."
       puts "The service will appear in the right-click context menu under 'Quick Actions' or 'Services'."
-    end
+        end
   end
+
+
 
   def uninstall
     # Remove macOS Finder integration
@@ -59,36 +61,45 @@ class Fileencryptor < Formula
   end
 
   def caveats
+    message = <<~EOS
+      ✅ FileEncryptor has been installed successfully!
+      
+      📍 Binary location: #{bin}/FileEncryptor
+
+      🚀 QUICK SETUP (copy and paste one of these):
+      
+      Option 1 - Add to PATH (recommended):
+        echo 'export PATH="#{bin}:$PATH"' >> ~/.zshrc && source ~/.zshrc
+      
+      Option 2 - Create symlink:
+        mkdir -p ~/bin && ln -sf #{bin}/FileEncryptor ~/bin/FileEncryptor
+
+      📋 REQUIREMENTS:
+      Install 1Password CLI and sign in:
+        brew install --cask 1password-cli && op signin
+      
+      Set OP_PATH if using custom 1Password CLI location.
+    EOS
+
     if OS.mac?
-      <<~EOS
-        FileEncryptor Finder integration has been automatically installed!
-        You may need to restart Finder or log out and back in for the service to appear.
-        The service will appear in the right-click context menu under 'Quick Actions' or 'Services'.
+      message += <<~EOS
 
-        To use FileEncryptor, you need to install 1Password CLI:
-          brew install --cask 1password-cli
-
-        Then sign in to 1Password CLI:
-          op signin
-
-        If you need to use a custom 1Password CLI location, set the OP_PATH environment variable.
-      EOS
-    else
-      <<~EOS
-        To use FileEncryptor, you need to install 1Password CLI:
-          brew install --cask 1password-cli
-
-        Then sign in to 1Password CLI:
-          op signin
-
-        If you need to use a custom 1Password CLI location, set the OP_PATH environment variable.
+      🍎 MACOS FINDER INTEGRATION:
+      ✅ Automatically installed! Right-click any file to see FileEncryptor options.
+      (Restart Finder if needed: killall Finder)
+      
+      🗑️  UNINSTALL CLEANUP:
+      To remove Finder integration when uninstalling:
+        rm -rf ~/Library/Services/FileEncryptor.workflow
       EOS
     end
+
+    message
   end
 
   test do
     # Test that the binary was installed and can show usage
-    output = shell_output("#{bin}/fileencryptor 2>&1", 1)
+    output = shell_output("#{bin}/FileEncryptor 2>&1", 1)
     assert_match "usage: FileEncryptor", output
   end
 end 

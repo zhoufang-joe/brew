@@ -39,12 +39,13 @@ echo "✅ Installation completed!"
 
 # Verify binary is installed
 echo "🔍 Verifying installed binary..."
-if ! command -v fileencryptor &> /dev/null; then
-    echo "❌ Error: fileencryptor binary not found in PATH"
+HOMEBREW_BINARY_PATH="/opt/homebrew/bin/FileEncryptor"
+
+if [[ ! -f "$HOMEBREW_BINARY_PATH" ]]; then
+    echo "❌ Error: FileEncryptor binary not found at $HOMEBREW_BINARY_PATH"
     exit 1
 fi
-
-echo "✅ Binary found in PATH"
+echo "✅ Homebrew binary found at $HOMEBREW_BINARY_PATH"
 
 # Test binary functionality (should show usage and exit with code 1)
 echo "🧪 Testing binary functionality..."
@@ -52,14 +53,14 @@ mkdir -p "$TEST_DIR"
 cd "$TEST_DIR"
 
 # Test that the binary shows usage when run without arguments
-echo "🔄 Testing usage output..."
-if output=$(fileencryptor 2>&1); then
+echo "🔄 Testing binary functionality..."
+if output=$("$HOMEBREW_BINARY_PATH" 2>&1); then
     echo "❌ Error: Binary should exit with non-zero status when run without arguments"
     exit 1
 else
     # Check if the output contains usage information
     if echo "$output" | grep -q "usage: FileEncryptor"; then
-        echo "✅ Usage output verified"
+        echo "✅ Binary usage output verified"
     else
         echo "❌ Error: Expected usage output not found"
         echo "Got output: $output"
@@ -139,11 +140,9 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     fi
 fi
 
-# Note about PATH caching
-if command -v fileencryptor &> /dev/null; then
-    echo "ℹ️  Note: Binary may still appear in PATH due to shell caching."
-    echo "ℹ️  This is normal - restart your shell or run 'hash -r' to clear the cache."
-fi
+# Note about manual cleanup for user-created symlinks
+echo "ℹ️  Note: Any user-created symlinks (~/bin/FileEncryptor) will need manual cleanup"
+echo "ℹ️  The Finder workflow will also need manual removal: rm -rf ~/Library/Services/FileEncryptor.workflow"
 
 echo ""
 echo "🎉 All tests passed!"

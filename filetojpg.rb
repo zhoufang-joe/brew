@@ -1,9 +1,8 @@
 class Filetojpg < Formula
   desc "Convert files to JPG format and extract files from JPG"
   homepage "https://github.com/zhoufang-joe/FileToJPG"
-  url "https://github.com/zhoufang-joe/FileToJPG/archive/refs/heads/master.tar.gz"
+  url "git@github.com:zhoufang-joe/FileToJPG.git", branch: "master"
   version "2.0.0"
-  sha256 :no_check
   license "MIT"
 
   depends_on "go" => :build

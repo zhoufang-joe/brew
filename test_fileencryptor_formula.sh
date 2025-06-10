@@ -105,7 +105,7 @@ brew list "$FORMULA_NAME"
 
 # Test formula caveats
 echo "📝 Formula caveats:"
-brew info "$FORMULA_NAME" | sed -n '/==> Caveats/,/==> /p' | head -n -1
+brew info "$FORMULA_NAME" | sed -n '/==> Caveats/,/==> /p' | sed '$d'
 
 echo "🗑️  Uninstalling formula..."
 brew uninstall "$FORMULA_NAME"

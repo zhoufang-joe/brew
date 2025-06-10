@@ -23,42 +23,25 @@ class Fileencryptor < Formula
     # Ensure dependencies are up to date
     system "go", "mod", "tidy"
     
-    # Build the binary and install to Homebrew's bin directory
-    system "go", "build", "-ldflags", "-s -w", "-o", bin/"FileEncryptor"
+    # Build the binary in the current directory first (for the install script)
+    system "go", "build", "-ldflags", "-s -w", "-o", "FileEncryptor"
     
-    # Install macOS-specific files and automatically set up Finder integration
-    if OS.mac?
-      # Install the Finder workflow to user's Services directory
-      services_dir = "#{Dir.home}/Library/Services"
-      workflow_path = "#{services_dir}/FileEncryptor.workflow"
-      
-      # Create Services directory if it doesn't exist
-      system "mkdir", "-p", services_dir
-      
-      # Copy workflow to Services directory
-      system "cp", "-R", "FileEncryptor.workflow", workflow_path
-      
-      puts "FileEncryptor Finder service installed automatically!"
-      puts "You may need to restart Finder or log out and back in for the service to appear."
-      puts "The service will appear in the right-click context menu under 'Quick Actions' or 'Services'."
-        end
-  end
-
-
-
-  def uninstall
-    # Remove macOS Finder integration
-    if OS.mac?
-      services_dir = "#{Dir.home}/Library/Services"
-      workflow_path = "#{services_dir}/FileEncryptor.workflow"
-      
-      if File.exist?(workflow_path)
-        system "rm", "-rf", workflow_path
-        puts "FileEncryptor Finder service removed automatically!"
-        puts "You may need to restart Finder for the changes to take effect."
-      end
+    # Use the repository's install script for macOS-specific setup
+    if OS.mac? && File.exist?("install_macos.sh")
+      # Make the script executable and run it
+      system "chmod", "+x", "install_macos.sh"
+      system "./install_macos.sh"
     end
-  end
+    
+    # Install binary and scripts to Homebrew's bin directory
+    bin.install "FileEncryptor"
+    
+    # Copy both install and uninstall scripts to bin directory for future use
+    if OS.mac?
+      bin.install "install_macos.sh" if File.exist?("install_macos.sh")
+      bin.install "uninstall_macos.sh" if File.exist?("uninstall_macos.sh")
+    end
+    end
 
   def caveats
     message = <<~EOS
@@ -89,8 +72,12 @@ class Fileencryptor < Formula
       (Restart Finder if needed: killall Finder)
       
       🗑️  UNINSTALL CLEANUP:
-      To remove Finder integration when uninstalling:
+      Option 1 - Use the repository's uninstall script:
+        #{bin}/uninstall_macos.sh
+      
+      Option 2 - Manual cleanup:
         rm -rf ~/Library/Services/FileEncryptor.workflow
+        rm -f ~/bin/FileEncryptor
       EOS
     end
 

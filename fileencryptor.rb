@@ -42,6 +42,10 @@ class Fileencryptor < Formula
       system "chmod", "+x", "#{bin}/install_macos.sh"
       # Set environment variables that the install script might need
       ENV["FILEENCRYPTOR_BIN_PATH"] = "#{bin}/FileEncryptor"
+      # Debug: Print home directory info
+      puts "DEBUG: Current HOME = #{ENV['HOME']}"
+      puts "DEBUG: Dir.home = #{Dir.home}"
+      
       # Run the install script from the homebrew bin directory
       Dir.chdir(bin) do
         system "./install_macos.sh"

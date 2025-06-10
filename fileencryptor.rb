@@ -37,35 +37,15 @@ class Fileencryptor < Formula
     end
   end
 
-  def post_install
-    if OS.mac? && File.exist?("#{bin}/install_macos.sh")
-      system "chmod", "+x", "#{bin}/install_macos.sh"
-      # Set environment variables that the install script might need
-      ENV["FILEENCRYPTOR_BIN_PATH"] = "#{bin}/FileEncryptor"
-      # Debug: Print home directory info
-      puts "DEBUG: Current HOME = #{ENV['HOME']}"
-      puts "DEBUG: Dir.home = #{Dir.home}"
-      
-      # Run the install script from the homebrew bin directory
-      Dir.chdir(bin) do
-        system "./install_macos.sh"
-      end
-    end
-  end
-
   def caveats
     message = <<~EOS
       ✅ FileEncryptor has been installed successfully!
       
       📍 Binary location: #{bin}/FileEncryptor
 
-      🚀 QUICK SETUP (copy and paste one of these):
+      🚀 QUICK SETUP (copy and paste the below command):
       
-      Option 1 - Add to PATH (recommended):
-        echo 'export PATH="#{bin}:$PATH"' >> ~/.zshrc && source ~/.zshrc
-      
-      Option 2 - Create symlink:
-        mkdir -p ~/bin && ln -sf #{bin}/FileEncryptor ~/bin/FileEncryptor
+      install_macos.sh
 
       📋 REQUIREMENTS:
       Install 1Password CLI and sign in:

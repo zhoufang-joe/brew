@@ -26,13 +26,6 @@ class Fileencryptor < Formula
     # Build the binary in the current directory first (for the install script)
     system "go", "build", "-ldflags", "-s -w", "-o", "FileEncryptor"
     
-    # Use the repository's install script for macOS-specific setup
-    if OS.mac? && File.exist?("install_macos.sh")
-      # Make the script executable and run it
-      system "chmod", "+x", "install_macos.sh"
-      system "./install_macos.sh"
-    end
-    
     # Install binary and scripts to Homebrew's bin directory
     bin.install "FileEncryptor"
     
@@ -40,8 +33,21 @@ class Fileencryptor < Formula
     if OS.mac?
       bin.install "install_macos.sh" if File.exist?("install_macos.sh")
       bin.install "uninstall_macos.sh" if File.exist?("uninstall_macos.sh")
+      bin.install "FileEncryptor.workflow" if File.exist?("FileEncryptor.workflow")
     end
+  end
+
+  def post_install
+    if OS.mac? && File.exist?("#{bin}/install_macos.sh")
+      system "chmod", "+x", "#{bin}/install_macos.sh"
+      # Set environment variables that the install script might need
+      ENV["FILEENCRYPTOR_BIN_PATH"] = "#{bin}/FileEncryptor"
+      # Run the install script from the homebrew bin directory
+      Dir.chdir(bin) do
+        system "./install_macos.sh"
+      end
     end
+  end
 
   def caveats
     message = <<~EOS
